@@ -1,0 +1,34 @@
+image: python:3.12.3-slim
+
+definitions:
+  steps:
+    - step: &lint-and-test
+        name: "Linting & Unit Tests"
+        caches:
+          - pip
+        script:
+          - pip install -r requirements.txt ruff pytest pytest-cov
+          - ruff check .
+          - pytest tests/ --cov=app
+          
+    - step: &build-and-scan
+        name: "Build & Scan"
+        services:
+          - docker
+        script:
+          - docker build -t lex-advisor-rag:${BITBUCKET_COMMIT} .
+          - apt-get update && apt-get install -y wget apt-transport-https gnupg lsb-release
+          - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add -
+          - echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | tee -a /etc/apt/sources.list.d/trivy.list
+          - apt-get update && apt-get install -y trivy
+          - trivy image --exit-code 1 --severity HIGH,CRITICAL lex-advisor-rag:${BITBUCKET_COMMIT}
+
+pipelines:
+  pull-requests:
+    '**':
+      - step: *lint-and-test
+      - step: *build-and-scan
+  tags:
+    'v*.*.*':
+      - step: *lint-and-test
+      - step: *build-and-scan

@@ -1,0 +1,780 @@
+openapi: 3.1.0
+info:
+  title: Lex-Advisor RAG Service
+  version: 0.1.0
+paths:
+  /metrics:
+    get:
+      summary: Metrics
+      description: Endpoint that serves Prometheus metrics.
+      operationId: metrics_metrics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/health:
+    get:
+      tags:
+      - Health
+      summary: Liveness Health Check
+      operationId: health_check_v1_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health Check V1 Health Get
+  /v1/query:
+    post:
+      tags:
+      - Query
+      summary: Query Documents
+      operationId: query_documents_v1_query_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: X-Request-ID
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Request-Id
+      - name: X-Tenant-ID
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Tenant-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/eval:
+    post:
+      tags:
+      - Query
+      summary: Eval Documents
+      operationId: eval_documents_v1_eval_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: X-Request-ID
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Request-Id
+      - name: X-Tenant-ID
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Tenant-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvalRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvalResponse'
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/ingest:
+    post:
+      tags:
+      - Ingest
+      - Ingest
+      summary: Ingest Document
+      operationId: ingest_document_v1_ingest_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: X-Request-ID
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Request-Id
+      - name: X-Tenant-ID
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Tenant-Id
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Idempotency-Key
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/ingest/{job_id}:
+    get:
+      tags:
+      - Ingest
+      - Ingest
+      summary: Get Job Status
+      operationId: get_job_status_v1_ingest__job_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/namespaces/{namespace_id}/sources/{source_id}:
+    delete:
+      tags:
+      - Namespaces
+      summary: Delete Single Source
+      operationId: delete_single_source_v1_namespaces__namespace_id__sources__source_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: namespace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Namespace Id
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Source Id
+      responses:
+        '204':
+          description: Successful Response
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/namespaces/{namespace_id}:
+    delete:
+      tags:
+      - Namespaces
+      summary: Delete Namespace
+      operationId: delete_namespace_v1_namespaces__namespace_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: namespace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Namespace Id
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/namespaces/{namespace_id}/stats:
+    get:
+      tags:
+      - Namespaces
+      summary: Get Namespace Stats
+      operationId: get_namespace_stats_v1_namespaces__namespace_id__stats_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: namespace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Namespace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request - Format invalid
+        '401':
+          description: Unauthorized - Invalid API Key
+        '403':
+          description: Forbidden - Acces interzis
+        '404':
+          description: "Not Found - Resursa nu a fost g\u0103sit\u0103"
+        '409':
+          description: Duplicate Job - Conflict de Idempotency-Key
+        '429':
+          description: Rate Limit Exceeded - Prea multe cereri
+        '500':
+          description: Internal Server Error
+        '503':
+          description: "Service Unavailable - Dependen\u021Be indisponibile"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ChatMessage:
+      properties:
+        role:
+          type: string
+          title: Role
+        content:
+          type: string
+          title: Content
+      type: object
+      required:
+      - role
+      - content
+      title: ChatMessage
+    Chunk:
+      properties:
+        chunk_id:
+          type: string
+          title: Chunk Id
+        content:
+          type: string
+          title: Content
+        article_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Article Number
+        section_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Section Title
+        point_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Point Number
+        page_number:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Page Number
+        source_id:
+          type: string
+          title: Source Id
+        source_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Url
+        source_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Title
+        namespace_id:
+          type: string
+          title: Namespace Id
+        score:
+          type: number
+          title: Score
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - chunk_id
+      - content
+      - source_id
+      - namespace_id
+      - score
+      title: Chunk
+    Citation:
+      properties:
+        marker:
+          type: string
+          title: Marker
+        chunk:
+          $ref: '#/components/schemas/Chunk'
+      type: object
+      required:
+      - marker
+      - chunk
+      title: Citation
+    EvalMetrics:
+      properties:
+        citation_precision_at_k:
+          type: number
+          title: Citation Precision At K
+        keyword_match_rate:
+          type: number
+          title: Keyword Match Rate
+      type: object
+      required:
+      - citation_precision_at_k
+      - keyword_match_rate
+      title: EvalMetrics
+    EvalRequest:
+      properties:
+        question:
+          type: string
+          maxLength: 2000
+          title: Question
+        language:
+          type: string
+          title: Language
+          default: ro
+        namespaces:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Namespaces
+        top_k:
+          type: integer
+          maximum: 50.0
+          title: Top K
+          default: 10
+        hint_article_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hint Article Number
+        conversation_history:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ChatMessage'
+            type: array
+            maxItems: 15
+          - type: 'null'
+          title: Conversation History
+          default: []
+        rerank:
+          type: boolean
+          title: Rerank
+          default: true
+        include_answer:
+          type: boolean
+          title: Include Answer
+          default: true
+        style_hints:
+          anyOf:
+          - $ref: '#/components/schemas/StyleHints'
+          - type: 'null'
+        expected_citations:
+          items:
+            type: string
+          type: array
+          title: Expected Citations
+          default: []
+        expected_answer_keywords:
+          items:
+            type: string
+          type: array
+          title: Expected Answer Keywords
+          default: []
+      type: object
+      required:
+      - question
+      - namespaces
+      title: EvalRequest
+    EvalResponse:
+      properties:
+        request_id:
+          type: string
+          title: Request Id
+        answer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Answer
+        citations:
+          items:
+            $ref: '#/components/schemas/Citation'
+          type: array
+          title: Citations
+        usage:
+          $ref: '#/components/schemas/Usage'
+        latency_ms:
+          type: integer
+          title: Latency Ms
+        model_version:
+          type: string
+          title: Model Version
+        retrieval_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retrieval Strategy
+          default: hybrid_qdrant_v1
+        confidence:
+          type: number
+          title: Confidence
+        eval:
+          $ref: '#/components/schemas/EvalMetrics'
+      type: object
+      required:
+      - request_id
+      - answer
+      - citations
+      - usage
+      - latency_ms
+      - model_version
+      - confidence
+      - eval
+      title: EvalResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    JobResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+        submitted_at:
+          type: string
+          title: Submitted At
+        estimated_completion_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Estimated Completion At
+      type: object
+      required:
+      - job_id
+      - status
+      - submitted_at
+      title: JobResponse
+    QueryRequest:
+      properties:
+        question:
+          type: string
+          maxLength: 2000
+          title: Question
+        language:
+          type: string
+          title: Language
+          default: ro
+        namespaces:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Namespaces
+        top_k:
+          type: integer
+          maximum: 50.0
+          title: Top K
+          default: 10
+        hint_article_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hint Article Number
+        conversation_history:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ChatMessage'
+            type: array
+            maxItems: 15
+          - type: 'null'
+          title: Conversation History
+          default: []
+        rerank:
+          type: boolean
+          title: Rerank
+          default: true
+        include_answer:
+          type: boolean
+          title: Include Answer
+          default: true
+        style_hints:
+          anyOf:
+          - $ref: '#/components/schemas/StyleHints'
+          - type: 'null'
+      type: object
+      required:
+      - question
+      - namespaces
+      title: QueryRequest
+    QueryResponse:
+      properties:
+        request_id:
+          type: string
+          title: Request Id
+        answer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Answer
+        citations:
+          items:
+            $ref: '#/components/schemas/Citation'
+          type: array
+          title: Citations
+        usage:
+          $ref: '#/components/schemas/Usage'
+        latency_ms:
+          type: integer
+          title: Latency Ms
+        model_version:
+          type: string
+          title: Model Version
+        retrieval_strategy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retrieval Strategy
+          default: hybrid_qdrant_v1
+        confidence:
+          type: number
+          title: Confidence
+      type: object
+      required:
+      - request_id
+      - answer
+      - citations
+      - usage
+      - latency_ms
+      - model_version
+      - confidence
+      title: QueryResponse
+    StyleHints:
+      properties:
+        answer_max_chars:
+          type: integer
+          title: Answer Max Chars
+          default: 2000
+        cite_inline:
+          type: boolean
+          title: Cite Inline
+          default: true
+        tone:
+          type: string
+          title: Tone
+          default: formal
+      type: object
+      title: StyleHints
+    Usage:
+      properties:
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+        cost_usd:
+          type: number
+          title: Cost Usd
+        model_id:
+          type: string
+          title: Model Id
+      type: object
+      required:
+      - input_tokens
+      - output_tokens
+      - cost_usd
+      - model_id
+      title: Usage
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

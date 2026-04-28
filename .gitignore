@@ -1,0 +1,28 @@
+# Python - foldere generate de sistem
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+build/
+dist/
+
+# Credențiale și secrete (CRITIC!)
+.env
+*.json
+!openapi.json
+!bitbucket-pipelines.yml
+
+# Docker
+.docker_temp/
+
+# OS - fișiere temporare
+.DS_Store
+Thumbs.db
+
+# Teste și date temporare
+test.html
+test.pdf
+outputs/

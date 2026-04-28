@@ -1,0 +1,28 @@
+# Web Framework
+fastapi>=0.115.0
+uvicorn>=0.31.1
+pydantic-settings>=2.5.2
+python-multipart==0.0.9
+
+# Google Cloud & AI
+google-cloud-aiplatform==1.44.0
+
+# Vector Database
+qdrant-client==1.8.0
+
+# Utilitare
+httpx>=0.28.1
+python-jose[cryptography]==3.3.0
+slowapi==0.1.9
+
+langchain-community>=0.0.16
+langchain-text-splitters>=0.0.1
+pypdf>=4.0.0
+prometheus-fastapi-instrumentator==7.0.0
+
+opentelemetry-distro
+opentelemetry-exporter-otlp
+opentelemetry-instrumentation-fastapi
+python-json-logger
+pyyaml
+beautifulsoup4

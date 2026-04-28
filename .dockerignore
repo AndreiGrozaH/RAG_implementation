@@ -1,0 +1,21 @@
+# Excludem mediile virtuale locale
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Excludem fișierele de date și loguri
+*.log
+data/
+
+# EXCLUDEM CHEILE ȘI SECRETELE (foarte important!)
+*.json
+.env
+
+# Excludem fișierele Git
+.git
+.gitignore
+
+# Excludem fișierele Docker care nu sunt necesare în runtime
+Dockerfile
+docker-compose.service.yml
