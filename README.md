@@ -45,6 +45,25 @@ curl -f http://localhost:8080/v1/health
 curl -s http://localhost:8080/metrics | grep vendor_cost
 curl -s http://localhost:8080/v1/openapi.json | grep title
 ```
+**Cheack Post (Ingest):**
+```bash
+curl.exe -i -X POST http://localhost:8080/v1/ingest -H "Authorization: Bearer your-secret-key" -H "Content-Type: application/json" -H "X-Request-ID: test-url" -H "X-Tenant-ID: local-test" -H "Idempotency-Key: v1" -d "{\"namespace_id\": \"docs\", \"source_id\": \"wiki\", \"source_type\": \"url\", \"url\": \"https://raw.githubusercontent.com/python/cpython/main/LICENSE\", \"mime_type_hint\": \"text/plain\"}"
+
+curl.exe -i -X POST http://localhost:8080/v1/ingest -H "Authorization: Bearer your-secret-key" -H "X-Request-ID: test-file" -H "X-Tenant-ID: local-test" -H "Idempotency-Key: v2" -F "file=@test.html" -F "payload={\"namespace_id\": \"docs\", \"source_id\": \"local\", \"source_type\": \"file\", \"mime_type_hint\": \"text/html\"}"
+
+```
+
+**Check Search (Query):**
+```bash
+curl.exe -i -X POST http://localhost:8080/v1/query -H "Authorization: Bearer your-secret-key" -H "Content-Type: application/json" -H "X-Request-ID: q1" -H "X-Tenant-ID: local-test" -d "{\"question\": \"Ce scrie in document?\", \"namespaces\": [\"docs\"], \"language\": \"ro\"}"
+```
+
+**Check Remove (Delete):**
+```bash
+curl.exe -i -X DELETE http://localhost:8080/v1/namespaces/docs/sources/local -H "Authorization: Bearer your-secret-key" -H "X-Request-ID: d1" -H "X-Tenant-ID: local-test"
+
+curl.exe -i -X DELETE http://localhost:8080/v1/namespaces/legal_docs -H "Authorization: Bearer your-secret-key" -H "X-Request-ID: delete-ns-1" -H "X-Tenant-ID: local-test"
+```
 ---
 
 
