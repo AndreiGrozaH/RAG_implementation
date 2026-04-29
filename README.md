@@ -1,4 +1,4 @@
-# Lex-Advisor RAG API Service
+# RAG API Service
 
 This repository contains the Retrieval-Augmented Generation (RAG) service platform.
 
