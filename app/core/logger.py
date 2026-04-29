@@ -12,7 +12,7 @@ def get_logger(name: str):
 
     logger.setLevel(logging.INFO)
 
-    # Creăm un handler care scrie în consolă (stdout), așa cum au cerut la 13.1
+    # Creăm un handler care scrie în consolă (stdout)
     log_handler = logging.StreamHandler(sys.stdout)
 
     # Definim formatul cerut: timestamp, nivel, mesaj, și cel mai important: ID-urile!

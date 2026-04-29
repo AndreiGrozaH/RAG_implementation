@@ -14,7 +14,7 @@ START_TIME = time.time()
 def health_check(response: Response) -> Dict[str, Any]:
     uptime = int(time.time() - START_TIME)
     
-    # 1. Ping Qdrant (Acceptabil pentru că e o conexiune internă în rețeaua Docker)
+    # 1. Ping Qdrant
     try:
         # Verificăm dacă clientul e viu apelând colecțiile
         vector_store.client.get_collections()
@@ -33,7 +33,7 @@ def health_check(response: Response) -> Dict[str, Any]:
     except Exception:
         llm_status = "down"
 
-    # 3. Object Store (Momentan folosim tempfile local)
+    # 3. Object Store 
     object_store_status = "ok"
     
     # Determinăm statusul global

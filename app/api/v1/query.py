@@ -73,7 +73,7 @@ def query_documents(
     # =====================================================================
     # 2. CONTRACT OPTIMIZATION: "include_answer = False"
     # =====================================================================
-    # Dacă clientul a cerut doar căutare (fără AI), dăm return AICI, salvând bani și timp!
+    # Dacă clientul a cerut doar căutare (fără AI), dăm return AICI!
     if not query_data.include_answer:
         return QueryResponse(
             request_id=x_request_id,
@@ -164,7 +164,7 @@ def eval_documents(
 ):
     start_time = time.time()
 
-    # 1. RETRIEVAL (La fel ca la Query)
+    # 1. RETRIEVAL 
     query_vector = vertex_service.get_embeddings(eval_data.question)
     search_results = vector_store.search_chunks(
         namespace_id=eval_data.namespaces[0],
@@ -241,8 +241,7 @@ def eval_documents(
     
     # Calculăm citation_precision_at_k (Câte din cele așteptate am găsit în Qdrant?)
     returned_chunk_ids = [c.chunk_id for c in retrieved_chunks]
-    if eval_data.expected_citations and returned_chunk_ids:
-        # Găsim intersecția dintre ce a găsit DB-ul și ce voia contractorul
+    if eval_data.expected_citations and returned_chunk_ids:        
         matched_citations = set(returned_chunk_ids).intersection(set(eval_data.expected_citations))
         precision = len(matched_citations) / len(returned_chunk_ids)
     else:

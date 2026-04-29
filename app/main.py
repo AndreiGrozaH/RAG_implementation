@@ -56,7 +56,7 @@ if otlp_endpoint:
     span_processor = BatchSpanProcessor(otlp_exporter)
     tracer_provider.add_span_processor(span_processor)
 
-# Aceasta funcție magică se agață de toate rutele tale automat
+
 FastAPIInstrumentor.instrument_app(app)
 
 # Configurăm Prometheus
@@ -79,8 +79,7 @@ async def add_observability_headers(request: Request, call_next):
     # (Dacă dintr-un motiv anume lipsește, generăm noi unul temporar)
     request_id = request.headers.get("X-Request-ID", f"req-{uuid.uuid4()}")
     
-    # 3. Generăm Trace-ID-ul nostru (X-Vendor-Trace-ID)
-    # Acesta este "numărul de urmărire" al serverului tău
+    # 3. Generăm Trace-ID-ul nostru (X-Vendor-Trace-ID)    
     trace_id = f"trace-{uuid.uuid4().hex[:16]}"
     
     # ==========================================================
@@ -96,7 +95,7 @@ async def add_observability_headers(request: Request, call_next):
     response.headers["X-Vendor-Trace-ID"] = trace_id
     response.headers["X-Vendor-Retrieval-Strategy"] = "hybrid_qdrant_v1"
     
-    # Server-Timing este un format standard W3C. Noi punem timpul total momentan.
+    # Server-Timing este un format standard W3C.
     response.headers["Server-Timing"] = f"total_app;dur={process_time_ms}"
     
     return response
@@ -104,9 +103,8 @@ async def add_observability_headers(request: Request, call_next):
 # --- 1. HANDLER PENTRU ERORI HTTP GENERALE ---
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request: Request, exc: HTTPException):
-    request_id = request.headers.get("X-Request-ID", "unknown")
+    request_id = request.headers.get("X-Request-ID", "unknown")    
     
-    # Mapare automată a codurilor în texte conform specificației
     code_map = {
         400: "invalid_request", 401: "unauthorized", 403: "forbidden",
         404: "not_found", 409: "duplicate_job", 413: "payload_too_large",
@@ -165,7 +163,7 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
 # 1. Ruta de Health rămâne FĂRĂ parolă (la liber pentru monitorizare/Docker)
 app.include_router(health.router, prefix="/v1", tags=["Health"])
 
-# 2. Rutele de business primesc "Paznicul" 🔒
+# 2. Rutele de business primesc "Paznicul"
 app.include_router(
     query.router, 
     prefix="/v1", 

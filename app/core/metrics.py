@@ -1,6 +1,5 @@
 from prometheus_client import Counter
 
-# Definim contoarele cerute în specificația 13.6
 COST_COUNTER = Counter(
     "vendor_cost_usd_total", 
     "Total cost in USD for AI provider"

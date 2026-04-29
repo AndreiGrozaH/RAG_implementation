@@ -3,12 +3,11 @@ from vertexai.language_models import TextEmbeddingModel
 from vertexai.generative_models import GenerativeModel
 from app.core.config import settings
 
-# Inițializăm Vertex AI o singură dată, folosind variabilele din config.py (care respectă cerința europe-west3)
+# Inițializăm Vertex AI o singură dată, folosind variabilele din config.py (care respectă europe-west3)
 vertexai.init(project=settings.GCP_PROJECT_ID, location=settings.GCP_LOCATION)
 
 class VertexService:
-    def __init__(self):
-        # Folosim exact modelele pe care le-am promis în documentul de arhitectură
+    def __init__(self):        
         self.embedding_model = TextEmbeddingModel.from_pretrained("text-multilingual-embedding-002")
         self.generation_model = GenerativeModel("gemini-2.5-flash")
 

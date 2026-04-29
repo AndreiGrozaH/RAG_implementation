@@ -5,7 +5,7 @@ from typing import Optional
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Lex-Advisor RAG Service"
     
-    # Am șters default-ul! Acum este OBLIGATORIU să fie în fișierul .env
+    #Acum este OBLIGATORIU să fie în fișierul .env
     API_AUTH_KEY: str 
     
     GCP_PROJECT_ID: str = "rag-implementation-494307"
